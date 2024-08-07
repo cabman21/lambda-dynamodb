@@ -1,8 +1,13 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import AWS from 'aws-sdk';
-// import { v4 as uuid } from 'uuid';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { v4 as uuid } from 'uuid';
 
-const dynamo = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({});
+
+const dynamo = DynamoDBDocumentClient.from(client);
+
+const tableName = 'book';
 
 /**
  *
@@ -25,17 +30,17 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         // const requestJSON = JSON.parse(event.body);
         console.log(event.body);
         // console.log(requestJSON);
-        await dynamo
-            .put({
-                TableName: 'book',
+        body = await dynamo.send(
+            new PutCommand({
+                TableName: tableName,
                 Item: {
                     bookId: uuid(),
-                    title: 'requestJSON.title',
-                    author: 'requestJSON.author',
-                    publicationYear: 'requestJSON.publicationYear',
+                    title: 'Gone with the Wind',
+                    author: 'Margaret Mitchell',
+                    publicationYear: '1936',
                 },
-            })
-            .promise();
+            }),
+        );
         return {
             statusCode: statusCode,
             body: JSON.stringify({
@@ -53,6 +58,3 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         };
     }
 };
-function uuid(): any {
-    throw new Error('Function not implemented.');
-}

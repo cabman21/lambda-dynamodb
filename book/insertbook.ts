@@ -1,12 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, ScanCommand, PutCommand, GetCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import AWS from 'aws-sdk';
+// import { v4 as uuid } from 'uuid';
 
-const client = new DynamoDBClient({});
-
-const dynamo = DynamoDBDocumentClient.from(client);
-
-const tableName = 'book';
+const dynamo = new AWS.DynamoDB.DocumentClient();
 
 /**
  *
@@ -26,13 +22,25 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     };
 
     try {
-        body = await dynamo.send(new ScanCommand({ TableName: tableName }));
-        console.log(body);
-        // body = body.Items;
-        console.log(body.Items);
+        // const requestJSON = JSON.parse(event.body);
+        console.log(event.body);
+        // console.log(requestJSON);
+        await dynamo
+            .put({
+                TableName: 'book',
+                Item: {
+                    bookId: uuid(),
+                    title: 'requestJSON.title',
+                    author: 'requestJSON.author',
+                    publicationYear: 'requestJSON.publicationYear',
+                },
+            })
+            .promise();
         return {
             statusCode: statusCode,
-            body: JSON.stringify(body.Items),
+            body: JSON.stringify({
+                message: 'success',
+            }),
         };
     } catch (err) {
         statusCode = 500;
@@ -45,3 +53,6 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         };
     }
 };
+function uuid(): any {
+    throw new Error('Function not implemented.');
+}

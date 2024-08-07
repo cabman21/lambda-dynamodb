@@ -1,8 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import AWS from 'aws-sdk';
-import { v4 as uuid } from 'uuid';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
 
-const dynamo = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({});
+
+const dynamo = DynamoDBDocumentClient.from(client);
+
+const tableName = 'book';
 
 /**
  *
@@ -22,25 +26,13 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     };
 
     try {
-        const requestJSON = JSON.parse(event.body);
-        console.log(event.body);
-        console.log(requestJSON);
-        await dynamo
-            .put({
-                TableName: 'book',
-                Item: {
-                    bookId: uuid(),
-                    title: requestJSON.title,
-                    author: requestJSON.author,
-                    publicationYear: requestJSON.publicationYear,
-                },
-            })
-            .promise();
+        body = await dynamo.send(new ScanCommand({ TableName: tableName }));
+        console.log(body);
+        // body = body.Items;
+        console.log(body.Items);
         return {
             statusCode: statusCode,
-            body: JSON.stringify({
-                message: 'success',
-            }),
+            body: JSON.stringify(body.Items),
         };
     } catch (err) {
         statusCode = 500;

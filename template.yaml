@@ -17,7 +17,7 @@ Resources:
   GetBookListFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello-world/
+      CodeUri: book/
       Handler: app.lambdaHandler
       Runtime: nodejs20.x
       Architectures:
@@ -40,7 +40,7 @@ Resources:
   GetBookFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello-world/
+      CodeUri: book/
       Handler: getbook.lambdaHandler
       Runtime: nodejs20.x
       Architectures:
@@ -63,7 +63,7 @@ Resources:
   InsertBookFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello-world/
+      CodeUri: book/
       Handler: app2.lambdaHandler
       Runtime: nodejs20.x
       Architectures:

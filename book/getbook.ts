@@ -1,7 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, ScanCommand, PutCommand, GetCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
-const dynamo = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({});
+
+const dynamo = DynamoDBDocumentClient.from(client);
+
+const tableName = 'book';
 
 /**
  *
@@ -21,20 +26,19 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     };
 
     try {
-        body = await dynamo
-            .get({
-                TableName: 'book',
+        body = await dynamo.send(
+            new GetCommand({
+                TableName: tableName,
                 Key: {
                     bookId: '1234',
                 },
-            })
-            .promise();
+            }),
+        );
         console.log(body);
-        // body = body.Items;
-        console.log(body);
+        console.log(body.Item);
         return {
             statusCode: statusCode,
-            body: JSON.stringify(body),
+            body: JSON.stringify(body.Item),
         };
     } catch (err) {
         statusCode = 500;

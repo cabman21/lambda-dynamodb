@@ -18,7 +18,7 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
     const headers = {
@@ -26,13 +26,24 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     };
 
     try {
-        body = await dynamo.send(new ScanCommand({ TableName: tableName }));
+        const requestJSON = JSON.parse(event.body);
+        await dynamo.send(
+            new PutCommand({
+                TableName: tableName,
+                Item: {
+                    id: requestJSON.id,
+                    price: requestJSON.price,
+                    name: requestJSON.name,
+                },
+            }),
+        );
+        body = `Put item ${requestJSON.id}`;
         console.log(body);
-        // body = body.Items;
-        console.log(body.Items);
         return {
             statusCode: statusCode,
-            body: JSON.stringify(body.Items),
+            body: JSON.stringify({
+                message: 'hello world',
+            }),
         };
     } catch (err) {
         statusCode = 500;

@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuid } from 'uuid';
 
 const client = new DynamoDBClient({});
@@ -31,13 +31,10 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
         console.log(event.body);
         console.log(requestJSON);
         body = await dynamo.send(
-            new PutCommand({
+            new DeleteCommand({
                 TableName: tableName,
-                Item: {
-                    bookId: uuid(),
-                    title: requestJSON.title,
-                    author: requestJSON.author,
-                    publicationYear: requestJSON.publicationYear,
+                Key: {
+                    bookId: '1234',
                 },
             }),
         );

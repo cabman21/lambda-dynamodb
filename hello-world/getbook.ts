@@ -1,6 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { v4 as uuid } from 'uuid';
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
@@ -22,25 +21,20 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     };
 
     try {
-        const requestJSON = JSON.parse(event.body);
-        console.log(event.body);
-        console.log(requestJSON);
-        await dynamo
-            .put({
+        body = await dynamo
+            .get({
                 TableName: 'book',
-                Item: {
-                    bookId: uuid(),
-                    title: requestJSON.title,
-                    author: requestJSON.author,
-                    publicationYear: requestJSON.publicationYear,
+                Key: {
+                    bookId: '1234',
                 },
             })
             .promise();
+        console.log(body);
+        // body = body.Items;
+        console.log(body);
         return {
             statusCode: statusCode,
-            body: JSON.stringify({
-                message: 'success',
-            }),
+            body: JSON.stringify(body),
         };
     } catch (err) {
         statusCode = 500;

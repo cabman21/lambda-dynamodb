@@ -28,7 +28,6 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
     try {
         body = await dynamo.send(new ScanCommand({ TableName: tableName }));
         console.log(body);
-        // body = body.Items;
         console.log(body.Items);
         return {
             statusCode: statusCode,

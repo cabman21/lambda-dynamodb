@@ -29,7 +29,6 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
     try {
         const requestJSON = JSON.parse(event.body);
         console.log(event.body);
-        console.log(requestJSON);
         const bookId = uuid();
         body = await dynamo.send(
             new PutCommand({

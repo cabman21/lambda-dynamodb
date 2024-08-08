@@ -29,7 +29,6 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     try {
         const requestJSON = JSON.parse(event.body);
         console.log(event.body);
-        console.log(requestJSON);
         body = await dynamo.send(
             new DeleteCommand({
                 TableName: tableName,

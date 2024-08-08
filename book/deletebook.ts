@@ -19,7 +19,7 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: { body: string }): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
     const headers = {
@@ -34,7 +34,7 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
             new DeleteCommand({
                 TableName: tableName,
                 Key: {
-                    bookId: '1234',
+                    bookId: event.pathParameters.bookId,
                 },
             }),
         );

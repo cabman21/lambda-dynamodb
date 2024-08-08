@@ -19,7 +19,7 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: { body: string }): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
     const headers = {
@@ -29,12 +29,11 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
     try {
         const requestJSON = JSON.parse(event.body);
         console.log(event.body);
-        console.log(requestJSON);
         body = await dynamo.send(
             new PutCommand({
                 TableName: tableName,
                 Item: {
-                    bookId: '02e05ed1-e02f-4f79-a4ec-1e63e1f67488',
+                    bookId: event.pathParameters.bookId,
                     title: requestJSON.title,
                     author: requestJSON.author,
                     publicationYear: requestJSON.publicationYear,

@@ -30,11 +30,12 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
         const requestJSON = JSON.parse(event.body);
         console.log(event.body);
         console.log(requestJSON);
+        const bookId = uuid();
         body = await dynamo.send(
             new PutCommand({
                 TableName: tableName,
                 Item: {
-                    bookId: uuid(),
+                    bookId: bookId,
                     title: requestJSON.title,
                     author: requestJSON.author,
                     publicationYear: requestJSON.publicationYear,
@@ -45,6 +46,7 @@ export const lambdaHandler = async (event: { body: string }): Promise<APIGateway
             statusCode: statusCode,
             body: JSON.stringify({
                 message: 'success',
+                bookId: bookId,
             }),
         };
     } catch (err) {

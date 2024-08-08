@@ -18,15 +18,23 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
-    const headers = {
-        'Content-Type': 'application/json',
-    };
 
     try {
-        body = await dynamo.send(new ScanCommand({ TableName: tableName }));
+        // const { title } = event.queryStringParameters;
+        const title = event.queryStringParameters.title;
+
+        body = await dynamo.send(
+            new ScanCommand({
+                TableName: tableName,
+                // FilterExpression: 'title = :title',
+                // ExpressionAttributeValues: {
+                //     ':title': { S: title },
+                // },
+            }),
+        );
         console.log(body);
         console.log(body.Items);
         return {

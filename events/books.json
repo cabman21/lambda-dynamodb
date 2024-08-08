@@ -1,0 +1,7 @@
+{
+  "httpMethod": "GET",
+  "path": "/books",
+  "queryStringParameters": {
+    "title": "Gone with the Wind"
+  }
+}

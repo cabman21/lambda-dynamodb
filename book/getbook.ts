@@ -21,9 +21,6 @@ const tableName = 'book';
 export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
-    const headers = {
-        'Content-Type': 'application/json',
-    };
 
     try {
         body = await dynamo.send(

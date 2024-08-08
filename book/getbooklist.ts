@@ -32,7 +32,8 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
                 // FilterExpression: 'title = :title',
                 // ExpressionAttributeValues: {
                 //     ':title': { S: title },
-                // },
+                // },,
+                // FilterExpression: `contains(title, ${title})`,
             }),
         );
         console.log(body);

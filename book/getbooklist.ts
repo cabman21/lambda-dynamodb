@@ -28,7 +28,7 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
 
         body = await dynamo.send(
             new ScanCommand({
-                // ProjectionExpression: '#t, bookId, title, author, publicationYear',
+                ProjectionExpression: 'bookId, title, author, publicationYear',
                 FilterExpression: '#t = :t',
                 ExpressionAttributeNames: { '#t': 'title' },
                 ExpressionAttributeValues: { ':t': title },

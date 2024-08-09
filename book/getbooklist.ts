@@ -18,12 +18,12 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
 
     try {
-        const title = event.queryStringParameters.title;
+        const { title } = event.queryStringParameters;
         console.log(title);
 
         body = await dynamo.send(

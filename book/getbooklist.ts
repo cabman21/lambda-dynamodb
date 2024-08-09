@@ -25,15 +25,18 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     try {
         // const { title } = event.queryStringParameters;
         const title = event.queryStringParameters.title;
+        console.log(title);
 
         body = await dynamo.send(
             new ScanCommand({
                 TableName: tableName,
-                // FilterExpression: 'title = :title',
+                // FilterExpression: '#title = :title',
+                // ExpressionAttributeNames: {
+                //     '#title': 'title',
+                // },
                 // ExpressionAttributeValues: {
-                //     ':title': { S: title },
-                // },,
-                // FilterExpression: `contains(title, ${title})`,
+                //     ':title': { S: `${title}` },
+                // },
             }),
         );
         console.log(body);

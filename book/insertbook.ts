@@ -19,22 +19,32 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: { body: string }): Promise<APIGatewayProxyResult> => {
-    let body;
+export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let statusCode = 200;
 
+    // Check if request body is provided
+    if (!event.body) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: 'some error happened',
+            }),
+        };
+    }
+
     try {
-        const requestJSON = JSON.parse(event.body);
+        const body = JSON.parse(event.body);
+        const { title, author, publicationYear } = body;
         console.log(event.body);
         const bookId = uuid();
-        body = await dynamo.send(
+        await dynamo.send(
             new PutCommand({
                 TableName: tableName,
                 Item: {
                     bookId: bookId,
-                    title: requestJSON.title,
-                    author: requestJSON.author,
-                    publicationYear: requestJSON.publicationYear,
+                    title: title,
+                    author: author,
+                    publicationYear: publicationYear,
                 },
             }),
         );

@@ -18,16 +18,17 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
 
     try {
+        const { bookId } = event.pathParameters;
         body = await dynamo.send(
             new GetCommand({
                 TableName: tableName,
                 Key: {
-                    bookId: event.pathParameters.bookId,
+                    bookId: bookId,
                 },
             }),
         );

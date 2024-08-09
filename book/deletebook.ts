@@ -19,18 +19,18 @@ const tableName = 'book';
  *
  */
 
-export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> => {
+export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let body;
     let statusCode = 200;
 
     try {
-        const requestJSON = JSON.parse(event.body);
+        const { bookId } = event.pathParameters;
         console.log(event.body);
         body = await dynamo.send(
             new DeleteCommand({
                 TableName: tableName,
                 Key: {
-                    bookId: event.pathParameters.bookId,
+                    bookId: bookId,
                 },
             }),
         );
